@@ -63,17 +63,21 @@ kind: NetworkPolicy
 metadata:
   name: allow-same-namespace
   namespace: ecommerce-staging
+  annotations:
+    description: "Autorise seulement les clients du m\xEAme namespace vers ecommerce-api:8080\
+      \ ; aucune sortie lat\xE9rale."
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      app: ecommerce-api
   policyTypes:
   - Ingress
-  - Egress
   ingress:
   - from:
     - podSelector: {}
-  egress:
-  - to:
-    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 8080
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

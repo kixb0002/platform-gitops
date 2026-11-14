@@ -24,4 +24,8 @@ for env in ('dev', 'staging', 'prod'):
     assert quota['spec']['hard']['persistentvolumeclaims'] == '0'
     policies = [o for o in objects if o['kind'] == 'NetworkPolicy' and o['metadata']['namespace'] == name]
     assert {p['metadata']['name'] for p in policies} == {'default-deny', 'allow-same-namespace', 'allow-cluster-dns'}
+    local = next(p for p in policies if p['metadata']['name'] == 'allow-same-namespace')['spec']
+    assert local['podSelector'] == {'matchLabels': {'app': 'ecommerce-api'}}
+    assert local['policyTypes'] == ['Ingress']
+    assert local['ingress'] == [{'from': [{'podSelector': {}}], 'ports': [{'protocol': 'TCP', 'port': 8080}]}]
 print(f'{len(objects)} objets : frontières projets, admission, quotas et réseau vérifiées localement.')

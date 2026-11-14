@@ -7,3 +7,4 @@ patches:
   - path: patch-1.yaml
   - path: patch-2.yaml
   - path: patch-3.yaml
+  - path: patch-server-network.yaml
