@@ -3,7 +3,7 @@
 Cible : aks-taoufik-lab, api.lab-tk.click, IP statique 51.103.104.29.
 Namespace passerelle : platform-ingress ; GatewayClass gérée : approuting-istio.
 
-L’add-on géré est activé sur le cluster existant. Il installe son control plane
+Après accord, l’add-on sera activé sur le cluster existant. Il installera son control plane
 Istio et gère les proxies de passerelle, sans injection de sidecar dans l’API.
 Cette activation n’est pas encore réalisée : la revue automatique demande un
 accord explicite distinct pour l’add-on et ses composants persistants.
