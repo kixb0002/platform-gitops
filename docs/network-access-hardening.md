@@ -20,7 +20,7 @@ SSO ; ecommerce-dev reste Synced/Healthy. La connexion interactive Entra n’a p
 
 ## HTTPS en préparation, pas encore activé
 
-Le Terraform optionnel public-access.tf (platform-infra) prépare une IP Standard
+Le Terraform public-access.tf (platform-infra) a créé après accord une IP Standard
 statique pip-ecommerce-api-lab dans RG-Taoufik-Mellah, avec DNS Azure, et un rôle
 Network Contributor pour l’identité du control plane AKS, limité à cette IP.
 Aucun droit n’est demandé sur le groupe réseau géré MC_*.
@@ -30,8 +30,10 @@ La passerelle prévue est l’implémentation Gateway API gérée AKS (approutin
 pas ingress-nginx retiré. Il faudra activer l’add-on, configurer le certificat
 avec renouvellement automatique, la redirection HTTP vers HTTPS et une règle
 réseau ne permettant que la passerelle vers ecommerce-api:8080.
-Le choix du domaine et l’accord sur les nouvelles ressources payantes et le
-rôle réseau sont attendus avant création. Argo CD ne sera pas publié.
+Le domaine choisi est api.lab-tk.click, DNS géré chez Namecheap.
+L’IP créée est 51.103.104.29 ; le rôle réseau est limité à cette seule IP.
+La passerelle et le certificat ne sont pas encore déployés.
+Argo CD ne sera pas publié.
 
 ## Limites à traiter séparément
 
