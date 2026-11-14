@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ecommerce-api
+  namespace: platform-ingress
+spec:
+  secretName: ecommerce-api-tls
+  dnsNames:
+  - api.lab-tk.click
+  issuerRef:
+    name: letsencrypt
+    kind: Issuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always

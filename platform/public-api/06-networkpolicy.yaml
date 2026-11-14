@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-public-gateway
+  namespace: ecommerce-dev
+spec:
+  podSelector:
+    matchLabels:
+      app: ecommerce-api
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: platform-ingress
+      podSelector:
+        matchLabels:
+          gateway.networking.k8s.io/gateway-name: ecommerce-public
+    ports:
+    - protocol: TCP
+      port: 8080

@@ -1,0 +1,45 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ecommerce-public
+  namespace: platform-ingress
+spec:
+  gatewayClassName: approuting-istio
+  infrastructure:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: RG-Taoufik-Mellah
+      service.beta.kubernetes.io/azure-pip-name: pip-ecommerce-api-lab
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    hostname: api.lab-tk.click
+    allowedRoutes:
+      namespaces:
+        from: Selector
+        selector:
+          matchExpressions:
+          - key: kubernetes.io/metadata.name
+            operator: In
+            values:
+            - platform-ingress
+            - ecommerce-dev
+  - name: https
+    protocol: HTTPS
+    port: 443
+    hostname: api.lab-tk.click
+    allowedRoutes:
+      namespaces:
+        from: Selector
+        selector:
+          matchExpressions:
+          - key: kubernetes.io/metadata.name
+            operator: In
+            values:
+            - platform-ingress
+            - ecommerce-dev
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: ecommerce-api-tls

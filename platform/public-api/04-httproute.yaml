@@ -1,0 +1,17 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: redirect-https
+  namespace: platform-ingress
+spec:
+  parentRefs:
+  - name: ecommerce-public
+    sectionName: http
+  hostnames:
+  - api.lab-tk.click
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
