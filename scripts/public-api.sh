@@ -13,6 +13,11 @@ esac
 # Apply only after explicit approval of the managed AKS add-on and cert-manager.
 source "$root/scripts/kubeconfig.sh"
 bash "$root/scripts/preflight.sh"
+ready_nodes=$(kubectl get nodes -o json | python3 -c 'import json,sys; print(sum(any(c["type"]=="Ready" and c["status"]=="True" for c in n["status"]["conditions"]) for n in json.load(sys.stdin)["items"]))')
+if (( ready_nodes < 2 )); then
+  echo 'Ce LAB nécessite deux nœuds Ready pour la passerelle gérée ; aucune mise à l’échelle automatique.' >&2
+  exit 3
+fi
 (cd "$(dirname "$chart")" && sha256sum -c SHA256SUMS)
 az aks update -g RG-Taoufik-Mellah -n aks-taoufik-lab \
   --enable-gateway-api --enable-app-routing-istio --only-show-errors -o none

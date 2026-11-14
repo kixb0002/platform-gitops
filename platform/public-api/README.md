@@ -38,3 +38,15 @@ validation complète de production.
 Arrêt d’exposition : retirer les HTTPRoute et le Gateway de ce répertoire, après
 vérification du périmètre ; conserver les CRD et cert-manager tant que d’autres
 certificats en dépendent. Ne pas détruire le cluster ou le groupe de ressources.
+
+## Installation autorisée, en attente de capacité
+
+L’activation Gateway API/App Routing a été lancée après accord explicite.
+GatewayClass approuting-istio est Accepted. Un pod istiod tourne ; le deuxième
+est Pending avec FailedScheduling Insufficient cpu / Insufficient memory.
+Le pool system actuel contient un seul Standard_D2s_v5. La suite du script a
+été arrêtée localement avant cert-manager, Gateway public et émission TLS.
+L’opération Azure déjà lancée poursuit son exécution côté Azure.
+L’application Dev reste Synced/Healthy et aucune nouvelle VM n’a été créée.
+Le passage à deux nœuds demande un accord distinct sur VM et disque facturés.
+Le script vérifie désormais deux nœuds Ready avant de poursuivre.
