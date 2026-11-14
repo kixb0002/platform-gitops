@@ -20,10 +20,10 @@ Ils ne constituent pas trois clusters ni une isolation entre tenants hostiles.
 | Modules ACR / Key Vault | verified | Terraform init et validate réussis, provider signé et figé |
 | Création ACR / AcrPull | verified | Apply autorisé : 2 ajouts ; ACR Basic tmgitops237d8c7f sans admin |
 | Key Vault | not run | Désactivé par défaut, chemin privé et permissions réseau à valider |
-| CI de validation | not run | Workflow local figé par SHA, contrôles locaux passent ; exécution GitHub non faite |
-| Git et publication GitHub | unavailable | Deux dépôts publics existants vides, accès authentifié à connecter |
+| CI de validation | verified | Workflows GitHub platform-infra et platform-gitops exécutés avec succès |
+| Git et publication GitHub | verified | platform-infra et platform-gitops publiés sur main ; workflows de validation réussis |
 | E-commerce | verified | API catalogue/devis, 4 tests, audit Python, image ACR et test AKS réussis |
-| Application GitOps permanente | not run | Manifests prêts ; dépôt GitOps à publier avant synchronisation |
+| Application GitOps Dev | verified | ecommerce-dev Synced/Healthy, un pod Ready, Service ClusterIP ; santé/catalogue/devis testés |
 | Workload Identity | verified | AKS activé, pod injecté, échange fédéré Entra HTTP 200 |
 | Métriques / alertes | not run | Aucun Prometheus/Grafana/alerting prétendu opérationnel |
 | HA / restauration | not run | Nœud unique ; aucune validation de résilience/backup |
@@ -57,7 +57,8 @@ cluster du bootstrap upstream ; sa réduction devra être validée séparément.
 ## Dépôts et promotion
 
 Le dépôt autorisé est `https://github.com/kixb0002/platform-gitops.git`, public
-et vide lors de l'inspection. `platform-infra` existe aussi et est vide. Le dépôt
+initialement vide. `platform-infra` était également vide. Les deux dépôts sont
+maintenant publiés sur main. Le dépôt
 `ecommerce-app` reste à créer. Trois contenus autonomes sont prêts dans
 `.local/repos/`. Pour un futur dépôt privé, obtenir l'accès via une
 GitHub App ou un accès SSH en lecture seule, sans clé/token en Git. Ajouter
@@ -81,7 +82,7 @@ Un rollback de code ne restaure pas automatiquement une base de données.
 
 ## Informations nécessaires pour poursuivre
 
-- Connexion GitHub authentifiée pour publier les deux dépôts et créer ecommerce-app.
+- Dépôt ecommerce-app et identité CI de build/promotion inter-dépôts à finaliser.
 - Validation du login SSO dans le navigateur avant retrait de l’admin local.
 - Identité CI dédiée et GitHub App de promotion inter-dépôts à configurer.
 - Décision réseau privée et capacité avant de prétendre à une cible production.
@@ -123,3 +124,23 @@ L'apply ne crée, ne modifie ni ne supprime aucun objet distant. Le propriétair
 existant du service principal est conservé explicitement. Le rendu GitOps du
 LAB inclut les quatre patches SSO actifs et la CI vérifie leur cohérence.
 Le script impératif de création Entra est désactivé. Voir `docs/sso-iac-migration.md`.
+
+## Publication et premier déploiement GitOps
+
+Les commits initiaux a01b514 (infra) et 2ce59c7 (GitOps) sont publiés sur main.
+Les deux workflows de validation ont réussi :
+- https://github.com/kixb0002/platform-infra/actions/runs/43617732321
+- https://github.com/kixb0002/platform-gitops/actions/runs/43617738614
+
+Après validation serveur, seule applications/dev.yaml a été créée dans Argo CD.
+Argo CD a lu apps/ecommerce/overlays/dev et déployé le ServiceAccount, le
+Deployment et le Service. État observé : Synced/Healthy, un pod Ready,
+ClusterIP sans IP externe. Via le Service : santé HTTP 200, trois produits,
+devis 12300 centimes EUR et quantité négative rejetée HTTP 400.
+
+Accès local : source scripts/kubeconfig.sh puis
+`kubectl -n ecommerce-dev port-forward --address 127.0.0.1 svc/ecommerce-api 8081:80`.
+Catalogue : http://localhost:8081/api/products. Staging et Prod ne sont pas activés.
+Le build initial reste manuel ; le pipeline applicatif OIDC/scan/promotion
+inter-dépôts n'est pas encore opérationnel. Le SSO du serveur reste configuré
+comme précédemment et n'est pas auto-géré par cette Application applicative.

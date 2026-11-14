@@ -47,8 +47,8 @@ patches Kubernetes actifs sont déclarés dans
 `platform-gitops/bootstrap/argocd-lab`, qui constitue la source du rendu LAB.
 `scripts/provision-sso-lab.sh` est retiré et s'arrête sans modifier d'identité.
 `scripts/apply-sso-lab.py` lit les fichiers GitOps et ne gère aucun objet Entra.
-La publication GitHub et la réconciliation automatique de cette configuration
-restent à finaliser ; les fichiers locaux ne sont pas encore poussés.
+Les fichiers sont publiés sur GitHub dans platform-gitops. La configuration
+SSO du serveur Argo CD n’est pas encore réconciliée par une Application dédiée.
 Voir `docs/sso-iac-migration.md` pour l'import et les limites de périmètre.
 
 ```bash
