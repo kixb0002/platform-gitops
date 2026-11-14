@@ -6,4 +6,4 @@ resources:
 images:
 - name: tmgitops237d8c7f.azurecr.io/ecommerce-api
   newName: tmgitops237d8c7f.azurecr.io/ecommerce-api
-  digest: sha256:aa74f68b8c4df48276696c95593b50b1080de8e5001c0d6849f04c31effa63b4
+  digest: sha256:307be498ba119ad1e10f574618b3b0b5c45ce41865ee53868d02c6f30874dae3
