@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+data:
+  policy.default: ''
+  scopes: '[oid]'
+  policy.csv: 'g, c5381316-b07f-40a2-a555-d89eee00b7dc, role:admin
+
+    '

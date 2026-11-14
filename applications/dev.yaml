@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ecommerce-dev
+  namespace: argocd
+spec:
+  project: ecommerce-dev
+  source:
+    repoURL: https://github.com/kixb0002/platform-gitops.git
+    targetRevision: main
+    path: apps/ecommerce/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ecommerce-dev
+  syncPolicy:
+    syncOptions:
+    - PruneLast=true
+    - FailOnSharedResource=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m
+    automated:
+      enabled: true
+      prune: false
+      selfHeal: true
+      allowEmpty: false

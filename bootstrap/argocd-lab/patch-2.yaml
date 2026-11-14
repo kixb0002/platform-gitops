@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+    azure.workload.identity/client-id: 385950ad-3417-4de1-83ca-73c59b970670
+    azure.workload.identity/tenant-id: 2e2e6db7-6a76-4504-90a7-ec7e7ad01939

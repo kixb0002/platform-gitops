@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: ecommerce-prod
+  namespace: argocd
+spec:
+  description: E-commerce prod; depot GitOps explicitement autorise
+  sourceRepos:
+  - https://github.com/kixb0002/platform-gitops.git
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: ecommerce-prod
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: ServiceAccount
+  - group: ''
+    kind: Pod
+  - group: ''
+    kind: PersistentVolumeClaim
+  - group: apps
+    kind: Deployment
+  - group: apps
+    kind: ReplicaSet
+  - group: apps
+    kind: StatefulSet
+  - group: batch
+    kind: Job
+  - group: batch
+    kind: CronJob
+  - group: autoscaling
+    kind: HorizontalPodAutoscaler
+  - group: policy
+    kind: PodDisruptionBudget
+  orphanedResources:
+    warn: true
+  roles:
+  - name: reader
+    description: Lecture des applications de cet environnement
+    policies:
+    - p, proj:ecommerce-prod:reader, applications, get, ecommerce-prod/*, allow
+  - name: deployer
+    description: Lecture et synchronisation manuelle sans modification des applications
+    policies:
+    - p, proj:ecommerce-prod:deployer, applications, get, ecommerce-prod/*, allow
+    - p, proj:ecommerce-prod:deployer, applications, sync, ecommerce-prod/*, allow

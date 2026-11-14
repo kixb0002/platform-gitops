@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ecommerce-staging
+  namespace: argocd
+spec:
+  project: ecommerce-staging
+  source:
+    repoURL: https://github.com/kixb0002/platform-gitops.git
+    targetRevision: main
+    path: apps/ecommerce/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ecommerce-staging
+  syncPolicy:
+    syncOptions:
+    - PruneLast=true
+    - FailOnSharedResource=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m
