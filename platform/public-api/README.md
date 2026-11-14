@@ -1,52 +1,75 @@
-# Accès HTTPS Dev — préparé, non déployé
+# Accès HTTPS Dev — déployé et vérifié
 
-Cible : aks-taoufik-lab, api.lab-tk.click, IP statique 51.103.104.29.
-Namespace passerelle : platform-ingress ; GatewayClass gérée : approuting-istio.
+URL catalogue : https://api.lab-tk.click/api/products
+URL devis : POST https://api.lab-tk.click/api/quotes
 
-Après accord, l’add-on sera activé sur le cluster existant. Il installera son control plane
-Istio et gère les proxies de passerelle, sans injection de sidecar dans l’API.
-Cette activation n’est pas encore réalisée : la revue automatique demande un
-accord explicite distinct pour l’add-on et ses composants persistants.
+Le 14 novembre 2026, après accords explicites, le pool system du cluster
+aks-taoufik-lab a été porté de 1 à 2 Standard_D2s_v5. Le nœud unique ne pouvait
+pas accueillir le deuxième istiod (Insufficient cpu/memory). Les deux nœuds
+sont Ready, avec deux pods istiod et deux proxies de passerelle prêts.
+Cette capacité supplémentaire et son disque restent facturés tant que conservés.
 
-cert-manager v1.21.3 est préparé comme chart officiel vendored, contrôlé par
-SHA256SUMS. Il ajoute des CRD, contrôleurs et droits Kubernetes nécessaires à la
-gestion des certificats. Ses clés ACME et TLS restent dans des Secrets Kubernetes,
-jamais dans Git. Issuer namespace-scoped, aucun accès au compte Namecheap requis.
+## Configuration
 
-Le Gateway reçoit HTTP 80 et HTTPS 443 sur l’IP autorisée ; HTTP redirige vers
-HTTPS, sauf la route ACME temporaire exacte pour la validation HTTP-01. Le certificat
-Let’s Encrypt utilise ECDSA et rotation de clé. Le renouvellement est automatique,
-mais doit être surveillé. Le service ecommerce-api reste ClusterIP. La route ne
-publie que /api de Dev, avec hostname api.lab-tk.click. Argo CD reste privé.
-La règle réseau n’admet que les pods du Gateway nommé dans platform-ingress vers
-les pods app=ecommerce-api sur TCP 8080. Staging et Prod ne sont pas publiés.
+- Gateway API/App Routing Istio géré AKS ; GatewayClass approuting-istio.
+- Gateway ecommerce-public dans platform-ingress, IP 51.103.104.29.
+- IP et rôle Network Contributor limités à cette IP : Terraform platform-infra.
+- Domaine api.lab-tk.click : enregistrement A ajouté chez Namecheap par l’utilisateur.
+- cert-manager v1.21.3 : chart officiel vendored et SHA256SUMS, configuration Helm.
+- Issuer Let’s Encrypt local à platform-ingress ; certificat ECDSA avec rotation.
+  Clés ACME/TLS dans des Secrets Kubernetes, jamais dans Git.
+- HTTP 80 : redirection vers HTTPS, sauf challenges ACME temporaires exacts.
+- HTTPS 443 : uniquement le préfixe /api vers le Service ClusterIP ecommerce-api
+  de Dev. La racine / n’est pas une boutique web et ne possède pas de route.
+- Règle réseau : namespace platform-ingress ET label du Gateway nommé, vers les
+  pods app=ecommerce-api sur TCP 8080. Les autres namespaces restent bloqués.
+- Le port de santé 15021 n’a pas de règle Load Balancer publique (annotation
+  port_15021_no_lb_rule=true). Les futures validations ACME utilisent ClusterIP.
+- Argo CD reste ClusterIP, accessible par tunnel local ; aucun Gateway pour lui.
+  Staging/Prod ne sont pas publiés.
 
-Contrôles après accord et installation : Gateway Programmed, HTTPRoute Accepted
-et ResolvedRefs, certificat Ready, DNS public, HTTP->HTTPS, chaîne TLS valide,
-catalogue et devis via HTTPS, autres namespaces toujours bloqués, Argo CD sain.
-Un rendu local réussi n’est pas une validation serveur ni un certificat émis.
-Les CRD Gateway/cert-manager ne sont pas encore installées sur la cible.
+## Preuves de validation
 
-La passerelle et cert-manager ne sont pas encore gérés par un Application Argo CD ;
-le script de bootstrap est explicite. L’activation de l’add-on AKS n’est pas gérée
-par le Terraform actuel (AKS est une data source). L’IP et le rôle restent Terraform.
+Gateway Accepted/Programmed/ResolvedRefs=True ; HTTPRoute Accepted/ResolvedRefs=True.
+Certificat Ready=True, échéance 2027-02-12T17:06:24Z, renouvellement planifié
+2027-01-13T17:06:24Z. Le renouvellement est configuré ; un renouvellement futur
+réel n’a pas encore été observé et doit être surveillé.
+Catalogue HTTPS avec validation TLS : 3 produits. Devis : 12300 centimes.
+HTTP->HTTPS : 301. Accès inter-namespace direct à l’API et Argo CD : bloqué.
+API localhost saine et Internet sortant bloqué. Dev Synced/Healthy.
 
-L’API expose uniquement des données de démonstration sans authentification client.
-Un accès HTTPS ne remplace pas l’authentification, le rate limiting, un WAF ou une
-validation complète de production.
+## Gestion et limites
 
-Arrêt d’exposition : retirer les HTTPRoute et le Gateway de ce répertoire, après
-vérification du périmètre ; conserver les CRD et cert-manager tant que d’autres
-certificats en dépendent. Ne pas détruire le cluster ou le groupe de ressources.
+Le script scripts/public-api.sh rend ou applique le bootstrap. Il vérifie deux
+nœuds Ready et le SHA du chart, puis évite de réactiver un add-on déjà activé.
+L’add-on, le nombre de nœuds, Helm et ces objets plateforme ne sont pas encore
+gérés par Terraform/une Application Argo CD ; ils sont versionnés pour reprise.
+Ne pas présenter le nombre de nœuds comme géré par Terraform : AKS reste une data
+source. Les secrets doivent aussi être pris en compte dans la sauvegarde/reprise.
+L’API ne contient que des données de démonstration sans authentification client.
+HTTPS ne remplace pas authentification, quotas de requêtes, WAF ou validation de
+production. L’API Kubernetes publique et les comptes locaux restent à traiter.
 
-## Installation autorisée, en attente de capacité
+## Retrait après test, uniquement sur demande explicite
 
-L’activation Gateway API/App Routing a été lancée après accord explicite.
-GatewayClass approuting-istio est Accepted. Un pod istiod tourne ; le deuxième
-est Pending avec FailedScheduling Insufficient cpu / Insufficient memory.
-Le pool system actuel contient un seul Standard_D2s_v5. La suite du script a
-été arrêtée localement avant cert-manager, Gateway public et émission TLS.
-L’opération Azure déjà lancée poursuit son exécution côté Azure.
-L’application Dev reste Synced/Healthy et aucune nouvelle VM n’a été créée.
-Le passage à deux nœuds demande un accord distinct sur VM et disque facturés.
-Le script vérifie désormais deux nœuds Ready avant de poursuivre.
+1. Retirer les deux HTTPRoute de ce répertoire pour couper les routes publiques.
+2. Retirer le Gateway ; attendre la suppression du Service LoadBalancer et le
+   détachement de l’IP. Ne pas supprimer le Load Balancer sortant partagé AKS.
+3. Retirer le Certificate, l’Issuer, leurs Secrets dédiés et allow-public-gateway.
+   Vérifier l’absence d’autres ressources avant de retirer platform-ingress.
+4. Vérifier tous les certificats/issuers/gateways du cluster avant de désinstaller
+   cert-manager et désactiver App Routing Istio puis Gateway API. Ne pas supprimer
+   des CRD partagées par d’autres workloads. Les CRD cert-manager peuvent rester
+   après désinstallation Helm ; leur suppression détruirait leurs objets.
+5. Après retrait des pods ajoutés, vérifier capacité et budgets de disruption,
+   puis revenir à un nœud via AKS. Valider le rollout et la santé Dev.
+6. Retirer l’enregistrement api chez Namecheap avant de libérer l’IP pour éviter
+   de laisser le domaine pointer vers une adresse potentiellement réattribuée.
+7. Dans platform-infra, retirer explicitement prevent_destroy de cette seule IP,
+   mettre enable_public_api=false, vérifier un plan ciblant seulement IP et rôle,
+   puis appliquer après accord. Retirer uniquement le Gateway ne libère pas l’IP.
+8. Vérifier API interne et tunnel Argo CD ; conserver AKS, ACR, Argo CD et Dev.
+
+Le retrait n’a pas été exécuté pendant l’installation. Les ressources du test
+restent en service et facturées. AKS et ACR gardent leurs frais habituels après
+suppression des seules ressources de publication.

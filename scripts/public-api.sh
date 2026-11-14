@@ -19,8 +19,12 @@ if (( ready_nodes < 2 )); then
   exit 3
 fi
 (cd "$(dirname "$chart")" && sha256sum -c SHA256SUMS)
-az aks update -g RG-Taoufik-Mellah -n aks-taoufik-lab \
-  --enable-gateway-api --enable-app-routing-istio --only-show-errors -o none
+routing_state=$(az aks show -g RG-Taoufik-Mellah -n aks-taoufik-lab \
+  --query '[ingressProfile.gatewayApi.installation, ingressProfile.webAppRouting.gatewayApiImplementations.appRoutingIstio.mode]' -o tsv)
+if [[ "$routing_state" != $'Standard\nEnabled' ]]; then
+  az aks update -g RG-Taoufik-Mellah -n aks-taoufik-lab \
+    --enable-gateway-api --enable-app-routing-istio --only-show-errors -o none
+fi
 kubectl wait --for=condition=Accepted gatewayclass/approuting-istio --timeout=180s
 helm upgrade --install cert-manager "$chart" --namespace cert-manager \
   --create-namespace -f "$root/bootstrap/cert-manager/values.yaml" \

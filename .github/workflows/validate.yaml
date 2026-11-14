@@ -17,10 +17,15 @@ jobs:
     - name: Check Bash and rendered security boundaries
       run: "bash -n scripts/*.sh\nbash scripts/argocd.sh render\npython3 tests/check-sso.py\
         \ .local/argocd.yaml\nbash scripts/platform.sh render\nfor env in dev staging\
-        \ prod; do\n  kubectl kustomize \"apps/ecommerce/overlays/$env\"\
-        \ > \".local/app-$env.yaml\"\n  python3 tests/check-app.py \".local/app-$env.yaml\"\
-        \ndone\npython3 -m py_compile scripts/render-sso.py tests/check-platform.py\
-        \ tests/integration-security.py\n"
+        \ prod; do\n  kubectl kustomize \"apps/ecommerce/overlays/$env\" > \".local/app-$env.yaml\"\
+        \n  python3 tests/check-app.py \".local/app-$env.yaml\"\ndone\npython3 -m\
+        \ py_compile scripts/render-sso.py tests/check-platform.py tests/integration-security.py\n"
+    - name: Validate public HTTPS manifests and pinned chart
+      run: 'kubectl kustomize platform/public-api > .local/public-api.yaml
+
+        (cd bootstrap/cert-manager/vendor && sha256sum -c SHA256SUMS)
+
+        '
 'on':
   pull_request: null
   push:

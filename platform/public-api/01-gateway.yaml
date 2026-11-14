@@ -9,6 +9,7 @@ spec:
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-resource-group: RG-Taoufik-Mellah
       service.beta.kubernetes.io/azure-pip-name: pip-ecommerce-api-lab
+      service.beta.kubernetes.io/port_15021_no_lb_rule: 'true'
   listeners:
   - name: http
     protocol: HTTP

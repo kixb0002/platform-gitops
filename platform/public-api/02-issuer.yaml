@@ -16,3 +16,4 @@ spec:
             namespace: platform-ingress
             kind: Gateway
             sectionName: http
+          serviceType: ClusterIP

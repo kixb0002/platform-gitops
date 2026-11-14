@@ -52,3 +52,12 @@ allow-same-namespace utilisait podSelector: {}, policyTypes: [Ingress, Egress],
 ingress: [{from: [{podSelector: {}}]}], egress: [{to: [{podSelector: {}}]}].
 Pour Argo CD, la règle précédente utilisait ingress: [{}]. Restaurer uniquement
 la règle nécessaire après diagnostic, puis rétablir la restriction corrigée.
+
+## HTTPS activé après accords
+
+L’add-on Gateway API/App Routing et cert-manager v1.21.3 sont installés.
+Le pool system est passé de 1 à 2 Standard_D2s_v5 après accord sur les frais.
+https://api.lab-tk.click/api/products fonctionne avec chaîne TLS vérifiée.
+Gateway Programmed, certificat Ready, HTTP->HTTPS 301, devis 12300 centimes.
+Les restrictions précédentes restent vérifiées. Voir platform/public-api/README.md
+pour les preuves, les limites et l’ordre du retrait après test.
