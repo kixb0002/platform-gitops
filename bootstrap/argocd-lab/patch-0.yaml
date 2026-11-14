@@ -1,3 +1,4 @@
+# Rôle : Configuration de connexion SSO ; URL locale correspondant à la redirection Entra.
 apiVersion: v1
 kind: ConfigMap
 metadata:

@@ -1,3 +1,4 @@
+# Rôle : Applique les patches Kubernetes SSO versionnés ; les identités Entra sont gérées séparément par Terraform.
 """Applique uniquement les quatre patches SSO préparés, après validation serveur.
 
 Précondition : source scripts/kubeconfig.sh ; Workload Identity prête.

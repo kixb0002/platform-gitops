@@ -1,3 +1,4 @@
+# Rôle : Vérification : présence et cohérence du SSO Workload Identity dans le rendu Argo CD.
 """Contrôle la cohérence du SSO dans le rendu GitOps, sans accès au cluster."""
 import sys
 import uuid

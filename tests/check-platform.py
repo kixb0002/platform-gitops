@@ -1,3 +1,4 @@
+# Rôle : Vérification : frontières AppProjects, quotas et règles réseau avant application.
 """Contrôles des frontières de sécurité avant toute application."""
 import sys
 import yaml

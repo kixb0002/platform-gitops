@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Rôle : Ancien provisionnement d’identités désactivé : utiliser Terraform pour éviter des créations hors état.
 set -euo pipefail
 # Ancien bootstrap : les identités existantes ont été adoptées par Terraform.
 echo "Bootstrap Entra retiré : utiliser platform-infra/environments/lab et ses blocs d'import." >&2

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Rôle : Rend, compare ou applique les namespaces, quotas, AppProjects et politiques réseau administrés par la plateforme.
 set -euo pipefail
 root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 mode=${1:-render}

@@ -1,3 +1,4 @@
+# Rôle : Application Argo CD dev : relie le dépôt GitOps au namespace ; Dev automatique, promotions Staging/Prod manuelles.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

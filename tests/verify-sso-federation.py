@@ -1,3 +1,4 @@
+# Rôle : Vérification : échange de jeton en mémoire ; ne jamais afficher le jeton retourné.
 """Vérifie l'injection AKS et l'échange fédéré Entra sans journaliser de jeton.
 
 Ne réalise pas le login interactif d'un utilisateur et n'appelle aucune API Azure

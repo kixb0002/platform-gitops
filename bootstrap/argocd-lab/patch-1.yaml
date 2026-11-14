@@ -1,3 +1,4 @@
+# Rôle : Autorisation Argo CD par Object ID : seul l’utilisateur explicite reçoit admin.
 apiVersion: v1
 kind: ConfigMap
 metadata:

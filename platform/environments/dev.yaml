@@ -1,3 +1,4 @@
+# Rôle : Garde-fous du namespace dev : admission restricted, budget, limites et refus réseau par défaut.
 apiVersion: v1
 kind: Namespace
 metadata:

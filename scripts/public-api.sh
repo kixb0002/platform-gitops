@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Rôle : Expérience HTTPS optionnelle et payante ; apply modifie AKS/Helm/réseau, render ne déploie rien.
 set -euo pipefail
 root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 mode=${1:-render}

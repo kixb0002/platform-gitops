@@ -1,3 +1,4 @@
+# Rôle : Valeurs du chart officiel : CRD et support Gateway API ; installation optionnelle lors d’un test HTTPS.
 crds:
   enabled: true
 config:

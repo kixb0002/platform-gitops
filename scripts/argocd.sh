@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Rôle : Bootstrap Argo CD figé ; render/preview/verify sont séparés de la création initiale, refusée si Argo CD existe.
 set -euo pipefail
 root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 base="$root/bootstrap/argocd"

@@ -1,3 +1,4 @@
+# Rôle : Déclare le nom DNS à certifier ; cert-manager crée le secret et planifie son renouvellement.
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:

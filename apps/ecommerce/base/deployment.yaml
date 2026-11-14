@@ -1,3 +1,4 @@
+# Rôle : Décrit le runtime API : probes, ressources, utilisateur non root et fichiers en lecture seule.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,6 +15,7 @@ spec:
         app: ecommerce-api
     spec:
       serviceAccountName: ecommerce-api
+      # L’API n’a aucun besoin d’appeler Kubernetes : pas de jeton dans le conteneur.
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
@@ -33,6 +35,7 @@ spec:
             readOnlyRootFilesystem: true
             capabilities:
               drop: [ALL]
+          # requests sert au placement ; limits borne la consommation à l’exécution.
           resources:
             requests:
               cpu: 50m
@@ -40,6 +43,7 @@ spec:
             limits:
               cpu: 300m
               memory: 256Mi
+          # Startup laisse démarrer Gunicorn ; readiness retire un pod malade du Service.
           startupProbe:
             httpGet:
               path: /healthz

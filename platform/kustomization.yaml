@@ -1,3 +1,4 @@
+# Rôle : Assemblage Kustomize : liste uniquement les ressources gérées par ce périmètre.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:

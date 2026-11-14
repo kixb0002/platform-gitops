@@ -1,3 +1,4 @@
+# Rôle : Génère les patches SSO à partir des identifiants publics ; ne doit jamais générer de secret client.
 """Prépare l'overlay SSO sans secret, sans écriture Azure/Kubernetes.
 
 Usage: python3 scripts/render-sso.py --tenant-id UUID --client-id UUID

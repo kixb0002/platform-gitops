@@ -61,3 +61,31 @@ https://api.lab-tk.click/api/products fonctionne avec chaîne TLS vérifiée.
 Gateway Programmed, certificat Ready, HTTP->HTTPS 301, devis 12300 centimes.
 Les restrictions précédentes restent vérifiées. Voir platform/public-api/README.md
 pour les preuves, les limites et l’ordre du retrait après test.
+
+## État final après retrait demandé
+
+Vérifié le 14 novembre 2026 : pool system revenu à un Standard_D2s_v5,
+AKS Succeeded, application ecommerce-dev Synced/Healthy. Gateway API et App Routing
+Istio Disabled ; classes/CRD Gateway et cert-manager du test supprimées après
+contrôle d’absence d’autres utilisateurs. Aucun Service LoadBalancer applicatif.
+L’IP pip-ecommerce-api-lab et son rôle ont été détruits par un plan Terraform
+vérifié : 0 création, 0 modification, 2 suppressions. enable_public_api=false.
+La protection prevent_destroy est rétablie pour une éventuelle nouvelle IP.
+Le contrôle Terraform après suppression ne présente aucun changement.
+
+Tests vérifiés : quatre tests API après commentaires, syntaxe Python/Bash,
+rendus et frontières Kubernetes/SSO, PSA privilégié refusé, LoadBalancer refusé
+par quota en dry-run, DNS autorisé, trafic latéral Dev et Staging->Dev bloqué.
+Tunnel local HTTP : santé ok, 3 produits et devis 12300 centimes. Tunnel Argo CD :
+API settings accessible avec OIDC configuré. Login SSO interactif non rejoué.
+Les pods temporaires du test sont nettoyés, sans toucher les workloads existants.
+
+Action utilisateur restante : supprimer l’enregistrement A api chez Namecheap.
+Le résolveur public Google renvoyait encore l’ancienne IP lors du contrôle final.
+L’ancienne IP est libérée et ne doit plus être utilisée ; aucun test HTTP n’a
+été envoyé à cette IP après sa suppression. Le DNS ne peut pas être modifié
+depuis cet environnement faute de connexion Namecheap.
+
+Le TLS local d’Argo CD et l’endpoint réseau technique AKS restent en place.
+Le retrait concerne uniquement l’exposition HTTPS publique de l’application.
+AKS et ACR gardent leur coût normal ; le deuxième nœud et l’IP du test sont retirés.

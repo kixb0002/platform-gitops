@@ -1,3 +1,4 @@
+# Rôle : Point d’accès interne stable ; port du Service 80 vers le port applicatif 8080.
 apiVersion: v1
 kind: Service
 metadata:

@@ -1,7 +1,11 @@
-# Accès HTTPS Dev — déployé et vérifié
+# Expérience HTTPS Dev — retirée, configuration conservée
 
-URL catalogue : https://api.lab-tk.click/api/products
-URL devis : POST https://api.lab-tk.click/api/quotes
+> Les URL ci-dessous documentent le test historique. Les routes et le certificat
+> ont été supprimés ; reprendre normalement par le tunnel interne, voir
+> [le guide de reprise](../../docs/reprendre-le-lab.md).
+
+URL historique catalogue : https://api.lab-tk.click/api/products
+URL historique devis : POST https://api.lab-tk.click/api/quotes
 
 Le 14 novembre 2026, après accords explicites, le pool system du cluster
 aks-taoufik-lab a été porté de 1 à 2 Standard_D2s_v5. Le nœud unique ne pouvait
@@ -70,6 +74,12 @@ production. L’API Kubernetes publique et les comptes locaux restent à traiter
    puis appliquer après accord. Retirer uniquement le Gateway ne libère pas l’IP.
 8. Vérifier API interne et tunnel Argo CD ; conserver AKS, ACR, Argo CD et Dev.
 
-Le retrait n’a pas été exécuté pendant l’installation. Les ressources du test
-restent en service et facturées. AKS et ACR gardent leurs frais habituels après
-suppression des seules ressources de publication.
+Le retrait a été demandé après le test. Les routes, le Gateway, le certificat,
+les clés, cert-manager, ses CRD, l’IP dédiée et son rôle ont été supprimés.
+Le pool est revenu à un nœud Ready ; Gateway API et App Routing sont Disabled.
+Leurs classes et CRD inutilisées ont également été nettoyées. AKS et ACR conservent leurs frais
+habituels ; la suppression du seul accès public ne les arrête pas.
+
+Le DNS Namecheap est géré par l’utilisateur : supprimer api si l’enregistrement
+pointe encore vers l’ancienne IP libérée. Ne pas utiliser l’ancienne IP lors
+d’une future expérience ; Azure peut en attribuer une différente.

@@ -1,3 +1,4 @@
+# Rôle : Compte ACME Let’s Encrypt local ; HTTP-01 via Gateway, sans identifiants Namecheap.
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:

@@ -1,4 +1,5 @@
-"""Tests réels : admission PSA/quotas, DNS et isolation réseau Cilium.
+# Rôle : Vérification : tests réels d’admission/réseau ; lire le périmètre et nettoyer les objets temporaires.
+"""Tests réels : admission PSA/quotas, DNS et refus du trafic latéral Cilium.
 
 Utilise trois pods temporaires et nettoie uniquement les noms créés par ce test.
 """
@@ -64,9 +65,12 @@ try:
     local = clients[0][1]
     kubectl('-n', 'ecommerce-dev', 'exec', local, '--', 'nslookup', 'kubernetes.default.svc.cluster.local')
     print('verified: DNS Kubernetes accessible', flush=True)
-    body = kubectl('-n', 'ecommerce-dev', 'exec', local, '--', 'wget', '-T', '5', '-qO-', f'http://{server_ip}:8080').stdout
-    assert 'isolation-ok' in body
-    print('verified: trafic autorisé dans le même namespace', flush=True)
+    # Le durcissement n’autorise plus tout le trafic local : ce serveur de test
+    # n’est pas ecommerce-api et aucun egress client ne lui est accordé.
+    result = kubectl('-n', 'ecommerce-dev', 'exec', local, '--', 'wget', '-T', '3',
+                     '-qO-', f'http://{server_ip}:8080', check=False)
+    assert result.returncode and 'timed out' in result.stderr.lower(), result.stderr
+    print('verified: trafic latéral non déclaré dans Dev bloqué', flush=True)
     result = kubectl('-n', 'ecommerce-staging', 'exec', clients[1][1], '--',
                      'wget', '-T', '3', '-qO-', f'http://{server_ip}:8080', check=False)
     assert result.returncode and 'timed out' in result.stderr.lower(), result.stderr

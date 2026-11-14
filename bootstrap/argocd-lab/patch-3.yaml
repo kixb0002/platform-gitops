@@ -1,3 +1,4 @@
+# Rôle : Active l’injection Workload Identity sur les pods argocd-server.
 apiVersion: apps/v1
 kind: Deployment
 metadata:

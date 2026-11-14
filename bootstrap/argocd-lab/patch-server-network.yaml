@@ -1,3 +1,4 @@
+# Rôle : Limite l’accès réseau au serveur aux pods Argo CD ; le tunnel kubectl reste possible.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

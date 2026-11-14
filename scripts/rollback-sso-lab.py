@@ -1,3 +1,4 @@
+# Rôle : Restaure une sauvegarde SSO ciblée ; opération de secours, à utiliser après diagnostic et vérification de la cible.
 """Prépare le retour aux quatre champs sauvegardés avant SSO.
 
 Par défaut : prépare les patches locaux seulement. --apply valide puis applique.

@@ -1,3 +1,4 @@
+# Rôle : Annote le ServiceAccount avec le client ID Entra public pour Workload Identity.
 apiVersion: v1
 kind: ServiceAccount
 metadata:

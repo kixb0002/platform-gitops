@@ -1,3 +1,4 @@
+# Rôle : Namespace réservé à la passerelle et aux secrets TLS ; absent en mode interne.
 apiVersion: v1
 kind: Namespace
 metadata:

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Rôle : Vérifie le cluster LAB autorisé et renouvelle uniquement son kubeconfig privé ; ne démarre pas le cluster.
 set -euo pipefail
 root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 resource_group=RG-Taoufik-Mellah

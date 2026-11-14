@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Rôle : À sourcer pour isoler KUBECONFIG du contexte utilisateur ; permissions Linux privées et contrôle des liens.
 # À sourcer : stockage Linux privé, hors du montage Windows /mnt/c.
 runtime_dir="/tmp/gitops-aks-$(id -u)"
 if [[ -L "$runtime_dir" || ( -e "$runtime_dir" && ( ! -d "$runtime_dir" || ! -O "$runtime_dir" ) ) ]]; then

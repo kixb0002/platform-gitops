@@ -1,3 +1,5 @@
+> Reprise après une pause : [guide pas à pas et schéma](docs/reprendre-le-lab.md).
+
 # Platform GitOps AKS LAB
 
 Argo CD 3.6.1, trois AppProjects et trois espaces LAB sur aks-taoufik-lab.

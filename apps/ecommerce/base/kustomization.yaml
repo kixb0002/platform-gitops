@@ -1,3 +1,4 @@
+# Rôle : Base commune réutilisée par les overlays Dev/Staging/Prod.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:

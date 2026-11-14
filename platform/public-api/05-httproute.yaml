@@ -1,3 +1,4 @@
+# Rôle : Expose seulement /api de Dev ; la destination est un Service ClusterIP, pas un pod nommé.
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:

@@ -1,3 +1,4 @@
+# Rôle : Vérification : contrôle des actions Terraform d’import ; empêcher une modification imprévue.
 """Refuse toute mutation cloud pendant l'adoption Terraform du SSO existant."""
 import argparse
 import json

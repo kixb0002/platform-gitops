@@ -1,3 +1,4 @@
+# Rôle : Vérification : sécurité du runtime et images immuables avant déploiement.
 """Contraintes de sécurité et d'intégrité des manifests applicatifs rendus."""
 import re
 import sys

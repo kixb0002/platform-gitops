@@ -1,3 +1,4 @@
+# Rôle : Frontière Argo CD default : dépôt/destination autorisés, sans déléguer RBAC, Secrets ou politiques réseau aux applications.
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:

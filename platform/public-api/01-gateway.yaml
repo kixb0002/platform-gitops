@@ -1,3 +1,4 @@
+# Rôle : Entrée publique optionnelle ; lie l’IP Terraform, le domaine, les ports et le secret TLS.
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
